@@ -1,0 +1,84 @@
+
+```{r}
+sales<-c(18,33,41,7,34,35,24,25,24,21,25,20,22,31,40,29,25,21,22,54,31,25,26,35)
+tsales<-ts(sales,start = c(2003,1),frequency = 12)
+tsales
+plot(tsales)
+start(tsales)
+end(tsales)
+frequency(tsales)
+tsales.subset<-window(tsales,start=c(2003,5),end=c(2004,6))
+tsales.subset
+```
+
+
+```{r}
+library(forecast)
+library(TTR)
+opar<-par(no.readonly = TRUE)
+par(mfrow =c(2,2))
+ylim <-c(min(Nile),max(Nile))
+plot(Nile,main="Raw time Series")
+plot(ma(Nile,3),main="Simple Moving Average(k=3)",ylim=ylim)
+plot(ma(Nile,7),main="Simple Moving Average(k=7)",ylim=ylim)
+plot(ma(Nile,12),main="Simple Moving Average(k=12)",ylim=ylim)
+par=(opar)
+```
+
+
+```{r}
+plot(AirPassengers)
+lAirPassengers<-log(AirPassengers)
+plot(lAirPassengers, ylab="log(AirPassengers)")
+fit<-stl(lAirPassengers,s.window="period")
+plot(fit)
+fit$time.series
+```
+
+
+```{r}
+exp(fit$time.series)
+plot(fit)
+```
+
+
+```{r}
+par(mfrow=c(2,1))
+library(forecast)
+monthplot(AirPassengers,xlab=" ",ylab=" ")
+seasonplot(AirPassengers,year.labels="TRUE",main = " ")
+```
+
+
+```{r}
+library(forecast)
+fit<-ets(nhtemp,model="ANN")
+fit
+forecast(fit,1)
+plot(forecast(fit,1),xlab="Year",ylab=expression(paste("Temperature(",degree*F,")",)),main="New Haven Annual Mean Temperature")
+accuracy(fit)
+```
+
+
+```{r}
+library(forecast)
+library(tseries)
+plot(Nile)
+ndiffs(Nile)
+dNile<-diff(Nile)
+plot(dNile)
+adf.test(dNile)
+```
+
+
+```{r}
+Acf(dNile)# Auto correlation fumctiom
+Pacf(dNile)# Partial Auto correlation function
+```
+
+
+```{r}
+fit<-arima(Nile,order=c(0,1,1))
+fit
+
+
