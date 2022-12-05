@@ -1,0 +1,33 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+#in this dataset revenue is dependent and other four variables are interdependent
+adverts<-read.csv(file.choose(),header=TRUE,sep=",")
+pairs(adverts)
+```
+
+
+```{r}
+plot(adverts$marketing_total,adverts$revenues,ylab="Revenues",xlab="Marketing Total",Main="Revenues and Marketing")
+#dependencies of two attribute
+```
+
+
+```{r}
+#lm for linear regression --- Y~X(Y is a function of X)
+model<-lm(revenues~marketing_total,data=adverts)
+model
+#intercept and slope - revenue increases 51.93 for every 1000 marketing_total
+#revenue 32.0067 for 0 expendicture of marketing_total
+```
+
+
+```{r}
+#residual = predicted value - actual valueaw]
+
+```
+

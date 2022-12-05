@@ -1,0 +1,222 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+
+
+```{r}
+market_basket<-
+  list(
+    c("apple","beer","rice","meat"),
+    c("apple","beer","rice"),
+    c("apple","beer"),
+    c("apple","pear"),
+    c("milk","beer","rice","meat"),
+    c("milk","beer","rice"),
+    c("milk","beer"),
+    c("milk","pear")
+  )
+  
+```
+```{r}
+market_basket
+```
+```{r}
+names(market_basket)<-paste("T",c(1:8),sep="")
+
+```
+
+```{r}
+market_basket
+```
+
+```{r}
+# used for apriori analysis
+install.packages("arules")
+```
+
+```{r}
+library(arules)
+```
+```{r}
+# used for vizulization
+library(arulesViz)
+```
+
+```{r}
+trans<-as(market_basket,"transactions")
+```
+
+```{r}
+dim(trans)
+#8: transactions
+#6 : items
+```
+
+```{r}
+dim(market_basket)
+```
+```{r}
+itemLabels(trans)
+```
+```{r}
+summary(trans)
+```
+```{r}
+image(trans)
+```
+```{r}
+itemFrequencyPlot(trans,topN=10,cex.names=1)
+```
+```{r}
+rules<-apriori(trans,parameter=list(supp=0.3,conf=0.5,maxlen=10,target="rules"))
+#maxlen=max no of item that can be present in the rules
+```
+```{r}
+summary(rules)
+```
+```{r}
+inspect(rules)
+```
+```{r}
+rules<-apriori(trans,parameter = list(supp=0.3,conf=0.5,maxlen=10,minlen=2,target="rules"))
+```
+```{r}
+summary(rules)
+```
+```{r}
+inspect(rules)
+```
+```{r}
+beer_rules<-apriori(trans,parameter=list(supp=0.3,conf=0.5,maxlen=10,minlen=2),appearance=list(default="lhs",rhs="beer"))
+```
+```{r}
+inspect(beer_rules)
+```
+```{r}
+beer_rules_lhs<-apriori(trans,parameter=list(supp=0.3,conf=0.5,maxlen=10,minlen=2),appearance=list(lhs="beer",default="rhs"))
+```
+```{r}
+inspect(beer_rules_lhs)
+```
+```{r}
+subrules<-head(rules,n=10,by="confidence")
+```
+```{r}
+plot(subrules,method="graph",engine="htmlwidget")
+```
+
+```{r}
+plot(subrules,method="paracoord")
+```
+```{r}
+# 14/oct/22
+library(mlbench)
+
+```
+
+```{r}
+data(Zoo)
+```
+```{r}
+head(Zoo)
+```
+```{r}
+summary(Zoo)
+```
+```{r}
+# we will convert the data into factor variable
+#converted because decision tree works on categorical data 
+
+for(i in c(1:12,14:16))  Zoo[[i]] <- as.factor(Zoo[[i]])
+```
+```{r}
+summary(Zoo)
+```
+```{r}
+?(Zoo)
+```
+
+```{r}
+library(rpart)
+```
+
+```{r}
+tree_default <-rpart(type~. ,data=Zoo)
+tree_default
+
+# will create classification tree based on target varibale (type variable).
+```
+
+```{r}
+library(rpart.plot)
+
+```
+```{r}
+rpart.plot(tree_default,extra = 2,under = TRUE,varlen = 0,faclen =0 )
+
+# extra =2 prints for each leaf node the numbers of correctly classified objects from data and the total number of projects from data, and the total number of the object from the training data following into that node
+```
+
+```{r}
+# this will generate the full tree even  when no pruning is applied 
+#minimum 2 split will be done 
+tree_full<-rpart(type~., data=Zoo,control = rpart.control(minsplit = 2,cp=0))
+```
+
+```{r}
+rpart.plot(tree_full,extra = 2,under = TRUE,varlen = 0,faclen =0,box.palette = 0)
+```
+
+```{r}
+Confusion matrix:
+  
+   True Positive : those instances where predicted class is equal to actual class 
+  True Negative :  those instances where predicted class is not equal to actual class
+  False positive: those instances where predicted class is positive but actually the instances are                         negative 
+  False negative: those instances where predicted class is negative but actually the instances are     positive.
+  
+  Precision=TP/(TP+FP);
+  >>identifies the frequency with which a model was correct when predicting the positive class
+  Recall=TP/(TP+FN);
+  >>identifies out that out of all the possible labels how many did the model correctly identified.
+   Answers the question --what percentage of the actual bird did we find?
+  
+```
+
+```{r}
+# Neural Network
+library(rsample)
+```
+```{r}
+library(ggplot2)
+```
+
+```{r}
+library(carat)
+```
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+adverts<-read.csv()
+```
+
