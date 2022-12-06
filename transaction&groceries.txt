@@ -1,0 +1,106 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+#create a list of basket
+market_basket<-list(
+  c("apple","beer","rice","meat"),
+  c("apple","beer","rice"),
+  c("apple","beer"),
+  c("apple","pear"),
+  c("milk","beer","rice","meat"),
+  c("milk","beer","rice"),
+  c("milk","beer"),
+  c("milk","pear")
+)
+names(market_basket)<-paste("T",c(1:8),sep=" ");
+market_basket
+```
+```{r}
+install.packages(arules)
+```
+```{r}
+library(arules)#package for apriori algorithm
+library(arulesViz)
+```
+
+
+```{r}
+trans<-as(market_basket,"transactions")
+dim(trans)
+```
+```{r}
+itemLabels(trans)
+summary(trans)
+image(trans)#sales with non zero values
+itemFrequencyPlot(trans,topN=10,cex.names=1)#display relative frequency(support)
+```
+```{r}
+rules<-apriori(trans,
+               parameter=list(supp=0.3,conf=0.5,
+                              maxlen=10,
+                              target="rules"))
+rules
+summary(rules)
+inspect(rules)
+rules<-apriori(trans,parameter=list(supp=0.3,conf=0.5,
+                                    maxlen=10,
+                                    minlen=2,
+                                    target="rules"))
+inspect(rules)#length of data items in a set=2
+beer_rules_rhs<-apriori(trans,parameter=list(supp=0.3,conf=0.5,maxlen=10,minlen=2),
+                                             appearance=list(default="lhs",rhs="beer"))
+inspect(beer_rules_rhs)#analyse what it will purchase before purchasing beer
+
+```
+
+```{r}
+beer_rules_lhs<-apriori(trans,parameter=list(supp=0.3,conf=0.5,maxlen=10,minlen=2),
+                                             appearance=list(lhs="beer",default="rhs"))
+inspect(beer_rules_lhs)
+#analyse what it will purchase after purchasing beer
+
+```
+```{r}
+subrules<-head(rules,n=10,by="confidence")
+plot(subrules,method="graph",engine="htmlwidget")
+```
+```{r}
+plot(subrules,method="paracoord")
+```
+```{r}
+data(Groceries)
+class(Groceries)
+summary(Groceries)
+inspect(Groceries)
+
+```
+```{r}
+dim(Groceries)
+```
+```{r}
+itemLabels(Groceries)
+summary(Groceries)
+image(Groceries)#sales with non zero values
+itemFrequencyPlot(Groceries,topN=10,cex.names=1)
+```
+
+
+```{r}
+inspect(head(Groceries,2))
+
+```
+```{r}
+grocery_rules<-apriori(Groceries,parameter=list(support=0.01,confidence=0.5))
+inspect(grocery_rules)
+```
+```{r}
+subrules<-head(rules,n=10,by="confidence")
+plot(subrules,method="graph",engine="htmlwidget")
+plot(subrules,method="paracoord")
+
+```
+

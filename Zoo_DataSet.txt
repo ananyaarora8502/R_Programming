@@ -1,0 +1,75 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library("mlbench")
+```
+
+
+```{r}
+data(Zoo)
+head(Zoo)
+summary(Zoo)
+```
+
+
+```{r}
+for(i in c(1:12,14:16))Zoo[[i]]<-as.factor(Zoo[[i]])# logical value converted into        categorigal
+summary(Zoo)
+summary(Zoo[[i]])
+```
+
+
+```{r}
+library("rpart")#it uses cart i.e, classification and regression algorithm
+```
+
+
+```{r}
+tree_default<-rpart(type~.,data=Zoo)# here type is the target column if it is continuous it will make regression tree and if is categorical it will make decision tree here it is categorical
+tree_default
+```
+
+
+```{r}
+library("rpart.plot")
+```
+
+
+```{r}
+rpart.plot(tree_default,extra=2,under=TRUE,varlen=0,faclen=0) # default tree
+# extra = 2 prints for each leaf node the no. of correctly classified objects from data and the total no of objects from data and the total no. of objects from training data falling into that node
+```
+
+
+```{r}
+tree_full<-rpart(type~.,data=Zoo,control=rpart.control(minsplit = 2,cp=0))
+tree_full
+rpart.plot(tree_full,extra=2,under=TRUE,varlen=0,faclen = 0)
+tree_full
+```
+
+```{r}
+install.packages("rsample");# for data spliting
+library("rsample")
+```
+
+
+```{r}
+install.packages("dplyr")# for data manipulation
+library("dplyr")
+```
+
+1t 
+```{r}
+install.packages("ggplot2")
+library("ggplot2")
+```
+
+
+```{r}
+install.packages("caret")
+library("caret")
+```

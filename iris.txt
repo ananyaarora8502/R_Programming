@@ -1,0 +1,173 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+data(iris)
+```
+
+```{r}
+head(iris)
+```
+
+```{r}
+summary(iris)
+
+```
+```{r}
+plot(iris,col=iris$Species)
+```
+```{r}
+#to check the duplicate entiries
+i<-duplicated(iris)
+i
+```
+```{r}
+which(i)
+```
+```{r}
+iris[i,]
+```
+```{r}
+unique(iris)
+```
+```{r}
+# gives the help and info about the element
+?unique
+?complete.cases
+```
+```{r}
+#
+complete.cases(iris)
+```
+```{r}
+clean.data<-unique(iris[complete.cases(iris),])
+```
+
+```{r}
+clean.data
+```
+
+```{r}
+summary(clean.data)
+```
+```{r}
+aggregate(.~Species,data=iris,FUN = mean)
+```
+```{r}
+aggregate(.~Species,data=iris,FUN = median)
+```
+```{r}
+id<-sample(1:nrow(iris),20)
+id
+```
+```{r}
+s<-iris[id,]
+s
+```
+```{r}
+plot(s,col=s$Species)
+```
+```{r}
+library(sampling)
+```
+```{r}
+id2<-strata(iris,stratanames="Species",size=c(5,5,5),method="srswor")
+#simple random sampling without replacement
+id2
+```
+```{r}
+s2<-iris[id2$ID_unit,]
+```
+
+
+```{r}
+s2
+```
+```{r}
+plot(s2,col=s2$Species)
+```
+```{r}
+library(scatterplot3d)
+```
+```{r}
+scatterplot3d(iris[,1:3],color = as.integer(iris$Species))
+```
+```{r}
+library(rgl)
+```
+
+```{r}
+plot3d(as.matrix(iris[,1:3]),col=as.integer(iris$Species),size=5)
+```
+```{r}
+?scatterplot3d
+```
+
+```{r}
+iris.scaled<-scale(iris[1:4])
+
+```
+
+```{r}
+head(iris.scaled)
+
+```
+```{r}
+summary(iris.scaled)
+```
+```{r}
+#proximeties : similarity or dissimilarity
+iris.scaled[1:5,]
+
+```
+```{r}
+dist(iris.scaled[1:5,],method="euclidian")
+#gives problem when outlier is present
+```
+
+```{r}
+dist(iris.scaled[1:5,],method = "manhattan")
+# 
+```
+
+```{r}
+#when r=infinity then it is called as chebyshev distance also called supremum distance , 
+#for r1= manhattan , r2 =euclidian
+
+dist(iris.scaled[1:5],method="maximum")
+```
+```{r}
+# for binary data we use humming dist and  jakard dist (A intersection B) /(A union B)
+b<-rbind(
+  c(0,0,0,1,1,1,1,0,0,1),
+  c(0,0,1,1,1,0,0,1,0,0)
+)
+```
+```{r}
+b
+```
+```{r}
+dist(b,method = "binary")
+```
+```{r}
+dist(b,method = "manhattan")
+```
+```{r}
+#classification & regression tree
+```
+
